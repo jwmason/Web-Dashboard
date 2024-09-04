@@ -44,7 +44,7 @@ The Chart Dashboard is a web application designed to:
 3. **Install Dependencies**:
 
     ```bash
-    pip install django djangorestframework
+    pip install django djangorestframework django-cors-headers
     ```
 
 4. **Apply Migrations**:
