@@ -55,24 +55,49 @@ const Dashboard = () => {
   const [lineData, setLineData] = useState<LineChartData | null>(null);
   const [barData, setBarData] = useState<BarChartData | null>(null);
   const [pieData, setPieData] = useState<PieChartData | null>(null);
+  
+  // State for loading and error handling
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch chart data from API on component mount
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+
+      // Define a timeout duration in milliseconds
+      const timeoutDuration = 5000; // 10 seconds
+
+      // Function to fetch data with timeout
+      const fetchWithTimeout = (url: string) => {
+        return Promise.race([
+          axios.get(url),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Request timed out')), timeoutDuration)
+          )
+        ]);
+      };
+
       try {
-        const candlestickRes = await axios.get<CandlestickData>('http://localhost:8000/api/candlestick-data/');
+        // Fetch data with timeout handling
+        const candlestickRes = await fetchWithTimeout('http://localhost:8000/api/candlestick-data/');
         setCandlestickData(candlestickRes.data);
 
-        const lineRes = await axios.get<LineChartData>('http://localhost:8000/api/line-chart-data/');
+        const lineRes = await fetchWithTimeout('http://localhost:8000/api/line-chart-data/');
         setLineData(lineRes.data);
 
-        const barRes = await axios.get<BarChartData>('http://localhost:8000/api/bar-chart-data/');
+        const barRes = await fetchWithTimeout('http://localhost:8000/api/bar-chart-data/');
         setBarData(barRes.data);
 
-        const pieRes = await axios.get<PieChartData>('http://localhost:8000/api/pie-chart-data/');
+        const pieRes = await fetchWithTimeout('http://localhost:8000/api/pie-chart-data/');
         setPieData(pieRes.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to fetch data. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -158,52 +183,74 @@ const Dashboard = () => {
 
   return (
     <div>
+      {/* Error Message */}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      
       {/* Candlestick Chart */}
       <div>
         <h2>Candlestick Chart</h2>
-        {candlestickData ? (
-          <Line
-            data={transformCandlestickData(candlestickData)}
-            options={{ responsive: true, plugins: { legend: { position: 'top' } } }}
-          />
-        ) : (
+        {loading ? (
           <p>Loading...</p>
+        ) : (
+          candlestickData ? (
+            <Line
+              data={transformCandlestickData(candlestickData)}
+              options={{ responsive: true, plugins: { legend: { position: 'top' } } }}
+            />
+          ) : (
+            <p>No candlestick data available</p>
+          )
         )}
       </div>
+      
       {/* Line Chart */}
       <div>
         <h2>Line Chart</h2>
-        {lineData ? (
-          <Line
-            data={transformLineData(lineData)}
-            options={{ responsive: true, plugins: { legend: { position: 'top' } } }}
-          />
-        ) : (
+        {loading ? (
           <p>Loading...</p>
+        ) : (
+          lineData ? (
+            <Line
+              data={transformLineData(lineData)}
+              options={{ responsive: true, plugins: { legend: { position: 'top' } } }}
+            />
+          ) : (
+            <p>No line chart data available</p>
+          )
         )}
       </div>
+      
       {/* Bar Chart */}
       <div>
         <h2>Bar Chart</h2>
-        {barData ? (
-          <Bar
-            data={transformBarData(barData)}
-            options={{ responsive: true, plugins: { legend: { position: 'top' } } }}
-          />
-        ) : (
+        {loading ? (
           <p>Loading...</p>
+        ) : (
+          barData ? (
+            <Bar
+              data={transformBarData(barData)}
+              options={{ responsive: true, plugins: { legend: { position: 'top' } } }}
+            />
+          ) : (
+            <p>No bar chart data available</p>
+          )
         )}
       </div>
+      
       {/* Pie Chart */}
       <div>
         <h2>Pie Chart</h2>
-        {pieData ? (
-          <Pie
-            data={transformPieData(pieData)}
-            options={{ responsive: true, plugins: { legend: { position: 'top' } } }}
-          />
-        ) : (
+        {loading ? (
           <p>Loading...</p>
+        ) : (
+          pieData ? (
+            <Pie
+              data={transformPieData(pieData)}
+              options={{ responsive: true, plugins: { legend: { position: 'top' } } }}
+            />
+          ) : (
+            <p>No pie chart data available</p>
+          )
         )}
       </div>
     </div>
