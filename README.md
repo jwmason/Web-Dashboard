@@ -7,6 +7,18 @@ The Chart Dashboard is a web application designed to:
 - Display candlestick, line, bar, and pie charts to provide comprehensive insights.
 - Offer a user-friendly interface to easily navigate and interpret different data sets.
 
+## Tech Stack
+
+- **Frontend**: 
+  - **React**: JavaScript library for building user interfaces.
+  - **Next.js**: React framework for server-side rendering and static site generation.
+  - **TypeScript**: Superset of JavaScript that adds static types.
+  - **Chart.js**: Library for creating interactive charts.
+
+- **Backend**:
+  - **Django**: High-level Python web framework for rapid development.
+  - **Django REST Framework**: Toolkit for building Web APIs.
+
 ## Setup
 
 ### Prerequisites
