@@ -37,6 +37,7 @@ The Chart Dashboard is a web application designed to:
 2. **Navigate to the backend directory**:
 
     ```bash
+    cd Web-Dashboard
     cd backend
     ```
 
