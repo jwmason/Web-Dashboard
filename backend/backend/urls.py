@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from api import views as api_views # Import views from the api app
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/candlestick-data/', api_views.candlestick_data, name='candlestick-data'),  # Endpoint for Candlestick data
+    path('api/line-chart-data/', api_views.line_chart_data, name='line-chart-data'),  # Endpoint for Line Chart data
+    path('api/bar-chart-data/', api_views.bar_chart_data, name='bar-chart-data'),  # Endpoint for Bar Chart data
+    path('api/pie-chart-data/', api_views.pie_chart_data, name='pie-chart-data'),  # Endpoint for Pie Chart data
 ]
