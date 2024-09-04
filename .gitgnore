@@ -1,5 +1,5 @@
 # Backend (Django)
-backend/__pycache__/
+backend/backend/__pycache__/
 backend/*.pyc
 backend/*.pyo
 backend/*.pyd
